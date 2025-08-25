@@ -55,16 +55,11 @@ tags: [Deep Link, App Link, Universal Link]
 > 앱 내의 특정 페이지로 바로 연결시켜주는 딥링크로, HTTP/HTTPS URL을 사용한다.
 
 사용자의 스마트폰이 해당 앱을 가지고 있다면 앱의 특정 콘텐츠를 바로 띄워주며, 만약 설치되어 있지 않다면 웹 페이지로 콘텐츠를 띄어주게 된다.
-- Android 6.0 (Api 23 이상)
+(* Android 6.0, Api 23 이상)
 
 <br>
 
-💫 우선, 동작 원리를 살펴보자. <br><br>
-딥링크를 정확히 이해하기 위해서는 **암묵적 인텐트(Implicit intents)**를 짚고 넘어가야 한다. 암묵적 인텐트는 간단히 앱 내, 또는 앱 간의 메시지를 전달해주는 역할을 해주는 친구라고 이해하면 된다.
-
-위의 **암묵적 인텐트(Implicit intents)**의 역할을 기억하고 App Link를 구현하는 방법에 대해 살펴보자. <br>
-우선 앱링크를 구현하려면 AndroidManifest.xml 파일 내 autoverify 속성을 사용해야한다. <br>
-
+우선 앱링크를 구현하려면 AndroidManifest.xml 파일 내 아래와 같이 선언되어야 한다. <br>
 
 <summary>Android Developer 발췌</summary>
 
@@ -80,6 +75,11 @@ tags: [Deep Link, App Link, Universal Link]
       <data android:host="k-coco.github.com"/>
   </intent-filter>
 ```
+
+<br>
+intent-filter 내에 다음과 같이 AutoVerify 속성을 true로 설정해줘야한다.
+AutoVerify 속성을 통해 해당 앱이 실제로 정의된 도메인과 연결된 것인지 시스템으로부터 검증하도록 요청한다.
+
 
 <br>
 다음으로는 운영중인 웹 서버에 assetlinks.json을 게시한다. assetslink 파일 내용은 아래와 같다.
@@ -110,11 +110,11 @@ tags: [Deep Link, App Link, Universal Link]
 
 2. 사용자가 해당 도메인을 클릭할 때 마다 매핑된 앱을 실행시켜 보여준다.
 
+<br>
+ps. 검증 여부는 /data/system/packages.xml 내에 가지고 있는 것 같다.(Android 9.0 기준)
 <br><br><br>
 
-
 ___
-
 
 #### URI Scheme
 > 앱 내의 특정 페이지로 바로 연결시켜주는 딥링크로, 커스텀 URI을 사용한다.
@@ -146,8 +146,9 @@ URI Scheme 방식은 앱링크에 비해 간단하다. AndroidManifest.xml 내�
 </activity>
 ```
 
-두 번째 Intent-filter를 보면 된다. scheme은 coco, host는 github.io이므로 _coco://github.io_ 형태로 호출하게 된다.
-해당 예시는 scheme과 host만 구현되어있지만 이 외에도 path와 parameter를 명시하여 받을 수 있다.  
+두 번째 Intent-filter를 보면 된다. <br>
+scheme은 coco, host는 github.io이므로 **_coco://github.io_** 형태로 호출하게 된다.
+해당 예시는 scheme과 host만 구현되어있지만 이 외에도 path와 parameter를 명시하여 받을 수 있다.
 
 
 
@@ -160,3 +161,7 @@ URI Scheme 방식은 앱링크에 비해 간단하다. AndroidManifest.xml 내�
 #### [Applink]<br> 
 <a href="https://developers.google.com/digital-asset-links/v1/getting-started?hl=ko">Google Digital Asset Links 동작 원리</a><br>
 <a href="https://developer.android.com/training/app-links/verify-android-applinks?hl=ko&_gl=1*1hzn0af*_up*MQ..*_ga*MTg5MzQ2NDY3OS4xNzU0OTExNjU3*_ga_6HH9YJMN9M*czE3NTQ5MTE2NTckbzEkZzAkdDE3NTQ5MTE2NTckajYwJGwwJGg2NTk5MTgxMTI.#web-assoc">Android 앱 링크 인증하기</a>
+
+
+#### [Deeplink] <br>
+<a href="https://developer.android.com/training/app-links/deep-linking?hl=ko">Android Developer, Deep link 구현하기</a>
