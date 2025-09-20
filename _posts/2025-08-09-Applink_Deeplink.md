@@ -166,7 +166,7 @@ scheme은 coco, host는 github.io이므로 **_coco://github.io_** 형태로 호�
 해당 앱은 Android 앱에서 발생할 수 있는 취약점들을 학습하기 위해 만들어졌다.
 
 Jadx로 해당 앱을 디컴파일하여 AndroidManifest.xml부터 살펴본다.
-![Android Manifest 분석]({{ '/assets/images/source/250907_img/manifest.png' | relative_url }})
+![Android Manifest 분석]({{ '/assets/images/source/250809_img/manifest.png' | relative_url }})
 WebViewActivity를 <span style="color: red">insecureshop://com.insecureshop</span> 형태로 호출이 가능하다.
 
 <br>
@@ -248,7 +248,7 @@ adb shell am start -W -a android.intent.action.VIEW -d "insecureshop://com.insec
 <br><br>
 
 위와 같이 호출할 경우, url 파라미터에 있는 URL을 WebView에서 실행하게 된다.
-![Android Manifest 분석](/assets/images/source/250907_img/mobile.png)
+![Android Manifest 분석](/assets/images/source/250809_img/mobile.png)
 블로그를 InsecureShop의 WebView로 띄운 모습이다.
 
 <br>
