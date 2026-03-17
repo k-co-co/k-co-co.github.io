@@ -48,14 +48,13 @@ JavaScript의 모든 객체는 상위 객체와 연결되어 있다.
 그렇다면, 객체에 없는 속성을 호출하면 어디서 값을 찾게 될까?
 이 탐색 과정을 <span style="color: blue; text-decoration: underline; font-weight: bold">프로토타입 체인(Prototype Chain)</span>이라고 한다.
 
-<br><br>
+<br>
 
 ### 프로토타입 오염(Prototype Pollution)
 <span style="color: red; text-decoration: underline; font-weight: bold">프로토타입 오염(Prototype Pollution)</span>은 공격자가 외부 입력을 통해 JavaScript 객체의 상위 프로토타입에 임의의 속성을 추가하거나 수정하는 취약점으로 데이터를 파싱하거나, 객체를 병합 또는 복사할 때 주로 발생한다.
 
-일반적으로 공격자는 `__proto__`나 `constructor.prototype` 같은 특수 키를 이용해 프로토타입 자체를 오염시킬 수 있으며, 구현된 로직에 따라 다르겠지만 <u>권한 상승, 설정 조작, 원격 코드 실행(RCE) 등의 위험</u>이 발생한다.
+일반적으로 공격자는 `__proto__`나 `constructor.prototype` 같은 특수 키를 이용해 프로토타입 자체를 오염시킬 수 있으며, 구현된 로직에 따라 다르겠지만 <span style="color: red; text-decoration: underline; font-weight: bold"><u>권한 상승, 설정 조작, 원격 코드 실행(RCE) 등의 위험</u></span>이 발생할 수 있다.
 
-<br>
 
 바로, 샘플 코드로 살펴보자. (코드는 Gemini 시키자...)
 ```JavaScript
@@ -85,15 +84,29 @@ console.log({}.coco);   // "WallWall" (새로 생성한 빈 객체도 오염됨)
 
 Object.prototype // {coco: 'WallWall', __defineGetter__: ƒ, __defineSetter__: ƒ, hasOwnProperty: ƒ, …}
 ```
+위와 같이 데이터를 merge하는 과정에서 키 검증이 없어 Object.prototype에 coco라는 속성이 추가된 것을 확인할 수 있다.
 
-나중에 설명을 추가하자...
+<br><br>
 
-<br><br><br>
+### 프로토타입 오염(Prototype Pollution) 대응방안
+위와 같이 Prototype Pollution은 웹 서비스 내에서 객체를 어떻게 사용하냐에 따라 달라지지만, 클라이언트와 서버 사이드를 모두 공격할 수 있는 파급력이 높은 취약점이라고 볼 수 있다.
 
-끝.
+1. 프로퍼티 키 검증
+- "\_\_proto\_\_", "constructor"와 같은 키를 허용하지 않도록 검증
+
+2. 프로토타입 객체 변경 방지
+- Object.freeze()와 Object.seal() 같은 함수 사용
+(* Object.freeze: 객체 속성과 값 수정 불가, Object.seal: 새 속성 추가 불가/기존 속성 변경 가능)
+
+3. hasOwnproperty 검증
+- 객체 속성을 접근할 때, 실제 객체가 갖고 있는 값인지 확인
+
+<br><br>
+
+ps. Burp CE에서 DOM Invader 기능을 사용하면 취약 포인트를 쉽게 찾을 수 있다...!
 
 <br><br>
 
 ## ✅ 참고
-<a href="https://portswigger.net/web-security/learning-paths/prototype-pollution">Prototype-pollution(PortSwigger)</a>
+<a href="https://portswigger.net/web-security/learning-paths/prototype-pollution">Prototype-pollution(PortSwigger)</a><br>
 <a href="https://www.hahwul.com/cullinan/attack/prototype-pollution/">Prototype-pollution blog</a>
